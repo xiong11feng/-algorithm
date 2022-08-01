@@ -1,28 +1,38 @@
 package main
 
 import (
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestSort_Insert(t *testing.T) {
-	items := []uint32{6, 3, 2, 1, 10, 8, 9, 2, 4, 4, 4, 30, 20, 7}
+	items := GenerateRandomArray(1000, 10000)
+	items2 := CopyArray(items)
 	Sort_Insert(items)
-	actual := arrayTostring(items)
-	assert.Equal(t, "12234446789102030", actual)
+	sort.Slice(items2, func(i, j int) bool {
+		return items2[i] < items2[j]
+	})
+	assert.True(t, CompareArray(items, items2), "")
 }
 
 func TestSort_Bubble(t *testing.T) {
-	items := []uint32{6, 3, 2, 1, 10, 8, 9, 2, 4, 4, 4, 30, 20, 7}
+	items := GenerateRandomArray(1000, 10000)
+	items2 := CopyArray(items)
 	Sort_Bubble(items)
-	actual := arrayTostring(items)
-	assert.Equal(t, "12234446789102030", actual)
+	sort.Slice(items2, func(i, j int) bool {
+		return items2[i] < items2[j]
+	})
+	assert.True(t, CompareArray(items, items2), "")
 }
 
 func TestSort_Selected(t *testing.T) {
-	items := []uint32{6, 3, 2, 1, 10, 8, 9, 2, 4, 4, 4, 30, 20, 7}
+	items := GenerateRandomArray(1000, 10000)
+	items2 := CopyArray(items)
 	Sort_Selected(items)
-	actual := arrayTostring(items)
-	assert.Equal(t, "12234446789102030", actual)
+	sort.Slice(items2, func(i, j int) bool {
+		return items2[i] < items2[j]
+	})
+	assert.True(t, CompareArray(items, items2), "")
 }

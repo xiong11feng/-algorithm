@@ -9,7 +9,7 @@ import (
 
 func TestXor_ExchangeItem(t *testing.T) {
 
-	items := []uint32{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+	items := []int32{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
 	Xor_ExchangeItem(items, 0, 8)
 	assert.Equal(t, "8123456709", arrayTostring(items))
@@ -18,7 +18,7 @@ func TestXor_ExchangeItem(t *testing.T) {
 	assert.Equal(t, "8132456709", arrayTostring(items))
 }
 
-func arrayTostring(items []uint32) string {
+func arrayTostring(items []int32) string {
 	value := ""
 	for i := 0; i < len(items); i++ {
 		value += fmt.Sprintf("%d", items[i])

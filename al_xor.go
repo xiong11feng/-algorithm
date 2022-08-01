@@ -7,7 +7,7 @@ package main
 // A^B^C = A^(B^C)
 // 此算法就是根据异或的性质，将数组中i，j元素互换位置，
 //  i != j
-func Xor_ExchangeItem(items []uint32, i, j uint32) {
+func Xor_ExchangeItem(items []int32, i, j uint32) {
 	items[i] = items[i] ^ items[j]
 	items[j] = items[i] ^ items[j]
 	items[i] = items[i] ^ items[j]
