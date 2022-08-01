@@ -7,13 +7,14 @@ import (
 )
 
 func TestGetMaxValue(t *testing.T) {
-	items := GenerateRandomArray(20000, 10000)
+	items := GenerateRandomArray(2000000, 10000)
 	expected := items[0]
 	for i := 0; i < len(items); i++ {
 		if expected < items[i] {
 			expected = items[i]
 		}
 	}
+
 	actual := GetMaxValue(items)
 
 	assert.Equal(t, expected, actual, "")

@@ -3,20 +3,15 @@
 */
 package main
 
-import (
-	"fmt"
-	"log"
-)
-
 var count = 0
 
+//获取数组中的最大值
 func GetMaxValue(items []int32) int32 {
 	return getMaxValueProcess(items, 0, len(items)-1)
 }
 
 func getMaxValueProcess(items []int32, l, r int) int32 {
 	count += 1
-	log.Println(fmt.Sprintf("%d", count))
 	if l == r {
 		return items[l]
 	}

@@ -39,3 +39,55 @@ func Sort_Insert(items []int32) {
 		}
 	}
 }
+
+//归并排序
+//思想：左侧排序，右侧排序，再整合
+//时间复杂度：O(N*lgN)
+//空间复杂度：O(N)
+func Sort_Merge(items []int32) {
+	if len(items) < 2 {
+		return
+	}
+	sort_Merge_Process(items, 0, len(items)-1)
+}
+
+func sort_Merge_Process(items []int32, l, r int) {
+	if l == r {
+		return
+	}
+	mid := l + ((r - l) >> 1)
+	sort_Merge_Process(items, l, mid)
+	sort_Merge_Process(items, mid+1, r)
+	merge(items, l, mid, r)
+}
+
+func merge(items []int32, l, m, r int) {
+	temp := make([]int32, r-l+1)
+	i := 0
+	p1 := l
+	p2 := m + 1
+	for p1 <= m && p2 <= r {
+		if items[p1] < items[p2] {
+			temp[i] = items[p1]
+			i++
+			p1++
+		} else {
+			temp[i] = items[p2]
+			i++
+			p2++
+		}
+	}
+	for p1 <= m {
+		temp[i] = items[p1]
+		i++
+		p1++
+	}
+	for p2 <= r {
+		temp[i] = items[p2]
+		i++
+		p2++
+	}
+	for i := 0; i < len(temp); i++ {
+		items[l+i] = temp[i]
+	}
+}
