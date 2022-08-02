@@ -91,3 +91,57 @@ func merge(items []int32, l, m, r int) {
 		items[l+i] = temp[i]
 	}
 }
+
+//求小和问题
+//在一个数组中，每一个数左边比当前数小的数累加起来，叫做这个数组的小和。求一个数组的小和。
+//例如[1,3,5,4] 1小和是0，3的小和1，5的小和1+3，4的小和1+3 ，所以数组的小和是9
+//算法思路：左侧小和转换成右侧大于本身的个数 * 自身的值，1 右侧三个大于1的数，小和是1*3，3右侧是2*3，5右侧是0，4右侧是0，数组小和是9
+//使用归并排序，归并的过程中，计算出小和
+func SmallSum(items []int32) int {
+	if len(items) <= 1 {
+		return 0
+	}
+	return smallSumProcess(items, 0, len(items)-1)
+}
+func smallSumProcess(items []int32, l, r int) int {
+	if l == r {
+		return 0
+	}
+	mid := l + ((r - l) >> 1)
+	return smallSumProcess(items, l, mid) + smallSumProcess(items, mid+1, r) + smallSumProcessMerge(items, l, mid, r)
+}
+
+func smallSumProcessMerge(items []int32, l, mid, r int) int {
+	temp := make([]int32, r-l+1)
+	i := 0
+	p1 := l
+	p2 := mid + 1
+	result := 0
+	for p1 <= mid && p2 <= r {
+		if items[p1] < items[p2] {
+			temp[i] = items[p1]
+			result += (r - p2 + 1) * int(temp[i])
+			i++
+			p1++
+
+		} else {
+			temp[i] = items[p2]
+			i++
+			p2++
+		}
+	}
+	for p1 <= mid {
+		temp[i] = items[p1]
+		i++
+		p1++
+	}
+	for p2 <= r {
+		temp[i] = items[p2]
+		i++
+		p2++
+	}
+	for j := 0; j < len(temp); j++ {
+		items[l+j] = temp[j]
+	}
+	return result
+}

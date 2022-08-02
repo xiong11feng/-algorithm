@@ -46,3 +46,10 @@ func TestSort_Merge(t *testing.T) {
 	})
 	assert.True(t, CompareArray(items, items2), "")
 }
+
+func TestSmallSum(t *testing.T) {
+	items := []int32{1, 2, 6, 5, 4, 1, 1, 1, 8, 7} //6+10+12+10+8 + 2 + 2 + 2 = 52
+	actual := SmallSum(items)
+	expected := 46
+	assert.Equal(t, expected, actual, "")
+}
