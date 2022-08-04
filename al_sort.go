@@ -1,5 +1,7 @@
 package main
 
+import "math/rand"
+
 //冒泡排序
 //比较相邻的元素。如果第一个比第二个大，就交换他们两个。
 func Sort_Bubble(items []int32) {
@@ -144,4 +146,133 @@ func smallSumProcessMerge(items []int32, l, mid, r int) int {
 		items[l+j] = temp[j]
 	}
 	return result
+}
+
+//荷兰国旗问题
+//设有一个数组，需要将小于数字a的数，放在数组左边，等于a的数放在中间，大于a的放在右边
+//算法思路：
+//假设数组长度是n，初始l=-1（l表示小于a的区域），r=n（r表示大于a的区域），所以l～r之间是等于a的区域
+//从头开始遍历数组，i=0开始，到i=n-1，如果：
+//arr[i] < a, swap(arr[l+1],arr[i]),i++,l++
+//arr[i] == a, i++
+//arr[i] > a, swap(arr[r-1],arr[i]),r--,i不变
+
+func DutchFlag(items []int32, a int32) {
+	l := -1
+	r := len(items)
+	for i := 0; i < r; {
+		if items[i] < a {
+			if i != l+1 {
+				Xor_ExchangeItem(items, uint32(i), uint32(l+1))
+			}
+			l++
+			i++
+		} else if items[i] == a {
+			i++
+		} else {
+			if i != r-1 {
+				Xor_ExchangeItem(items, uint32(i), uint32(r-1))
+			}
+			r--
+		}
+	}
+}
+
+//快速排序2.0版本，是荷兰国旗问题的拓展
+//假设数组是[4,3,5,6,5,0,1,7,8,5]
+//以数组最后一位作为a，分成三份[<5,=5,>5]
+//等于5的份，已经排序完成，左右两份继续相同办法，递归排序
+//最坏情况：数组已经有序，事件复杂度，O(N平方)
+//选择的a值，最好的情况是a在组中排在中等，O(NlgN)
+//a如果总是在左右边上，是最坏情况，O(N平方)
+func Sort_Fast_V2(items []int32) {
+	if len(items) < 2 {
+		return
+	}
+	sort_Fast_V2_Process(items, 0, len(items)-1)
+}
+func sort_Fast_V2_Process(items []int32, left, right int) {
+	if left == right {
+		return
+	}
+	l := left - 1
+	r := right + 1
+	a := items[right]
+	for i := left; i < r; {
+		if items[i] < a {
+			if i != l+1 {
+				Xor_ExchangeItem(items, uint32(i), uint32(l+1))
+			}
+			l++
+			i++
+		} else if items[i] == a {
+			i++
+		} else {
+			if i != r-1 {
+				Xor_ExchangeItem(items, uint32(i), uint32(r-1))
+			}
+			r--
+		}
+	}
+	if left < l {
+		//左侧递归
+		sort_Fast_V2_Process(items, left, l)
+	}
+	if r < right {
+		//右侧递归
+		sort_Fast_V2_Process(items, r, right)
+	}
+
+}
+
+//快速排序3.0
+//解决a值可能总是最差情况
+//3.0不使用末尾值作为a，而是随机选择一个值，作为a
+//这样好情况和坏情况变成了概率事件
+//计算出概率的期望值是O(NlgN)
+func Sort_Fast_V3(items []int32) {
+	if len(items) < 2 {
+		return
+	}
+	sort_Fast_V3_Process(items, 0, len(items)-1)
+}
+func sort_Fast_V3_Process(items []int32, left, right int) {
+	if left == right {
+		return
+	}
+
+	//随机选一个a
+	aIndex := rand.Intn(right+1-left) + left
+	if aIndex != right {
+		Xor_ExchangeItem(items, uint32(right), uint32(aIndex))
+	}
+
+	l := left - 1
+	r := right + 1
+	a := items[right]
+	for i := left; i < r; {
+		if items[i] < a {
+			if i != l+1 {
+				Xor_ExchangeItem(items, uint32(i), uint32(l+1))
+			}
+			l++
+			i++
+		} else if items[i] == a {
+			i++
+		} else {
+			if i != r-1 {
+				Xor_ExchangeItem(items, uint32(i), uint32(r-1))
+			}
+			r--
+		}
+	}
+	if left < l {
+		//左侧递归
+		sort_Fast_V2_Process(items, left, l)
+	}
+	if r < right {
+		//右侧递归
+		sort_Fast_V2_Process(items, r, right)
+	}
+
 }
