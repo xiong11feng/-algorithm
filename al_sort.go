@@ -1,6 +1,9 @@
 package main
 
-import "math/rand"
+import (
+	"container/heap"
+	"math/rand"
+)
 
 //冒泡排序
 //比较相邻的元素。如果第一个比第二个大，就交换他们两个。
@@ -297,6 +300,57 @@ func Sort_Heap(items []int) {
 		Heapify(items, 0, heapSize)
 		heapSize--
 		Xor_ExchangeItem(items, 0, heapSize)
-
 	}
+}
+
+//堆排序的拓展
+//如果一个基本有序的数组，排序后每个元素移动距离不超过k，如何进行排序
+//题目思考：使用堆排序，从坐标0开始，到k-1，先组成小根堆，之后弹出索引，0，压入k ...
+//弹出1，压入k+1 直到结束
+
+func SortArrDistanceLessK(items []int, k int) {
+	h := &IntegerHeap{}
+	for i := 0; i < k; i++ {
+		heap.Push(h, items[i])
+	}
+	length := len(items)
+	top := 0
+	tail := k
+	for top < len(items) {
+		items[top] = heap.Pop(h).(int)
+		if tail < length {
+			heap.Push(h, items[tail])
+		}
+		top++
+		tail++
+	}
+}
+
+// integerHeap a type
+type IntegerHeap []int
+
+// IntegerHeap method - gets the length of integerHeap
+func (iheap IntegerHeap) Len() int { return len(iheap) }
+
+// IntegerHeap method - checks if element of i index is less than j index
+func (iheap IntegerHeap) Less(i, j int) bool { return iheap[i] < iheap[j] }
+
+// IntegerHeap method -swaps the element of i to j index
+func (iheap IntegerHeap) Swap(i, j int) { iheap[i], iheap[j] = iheap[j], iheap[i] }
+
+//IntegerHeap method -pushes the item
+func (iheap *IntegerHeap) Push(heapintf interface{}) {
+
+	*iheap = append(*iheap, heapintf.(int))
+}
+
+//IntegerHeap method -pops the item from the heap
+func (iheap *IntegerHeap) Pop() interface{} {
+	var n int
+	var x1 int
+	var previous IntegerHeap = *iheap
+	n = len(previous)
+	x1 = previous[n-1]
+	*iheap = previous[0 : n-1]
+	return x1
 }

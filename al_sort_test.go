@@ -91,3 +91,13 @@ func TestSort_Heap(t *testing.T) {
 	})
 	assert.True(t, CompareArray(items, items2), "")
 }
+
+func TestSortArrDistanceLessK(t *testing.T) {
+	items := []int{2, 3, 1, 5, 6, 7, 4, 10, 8, 9, 14, 11, 12, 13}
+	items2 := CopyArray(items)
+	SortArrDistanceLessK(items, 4)
+	sort.Slice(items2, func(i, j int) bool {
+		return items2[i] < items2[j]
+	})
+	assert.True(t, CompareArray(items, items2), "")
+}
