@@ -7,7 +7,7 @@ package main
 // A^B^C = A^(B^C)
 // 此算法就是根据异或的性质，将数组中i，j元素互换位置，
 //  i != j
-func Xor_ExchangeItem(items []int32, i, j uint32) {
+func Xor_ExchangeItem(items []int, i, j int) {
 	items[i] = items[i] ^ items[j]
 	items[j] = items[i] ^ items[j]
 	items[i] = items[i] ^ items[j]
@@ -17,12 +17,12 @@ func Xor_ExchangeItem(items []int32, i, j uint32) {
 //原因：A^A = 0
 //     A^A^A = 0^A =A
 //结论：奇数个A异或为A，偶数个A异或为0
-func Xor_FindOddDights(items []uint32) uint32 {
+func Xor_FindOddDights(items []int) int {
 	xor := 0
 	for i := 0; i < len(items); i++ {
 		xor ^= int(items[i])
 	}
-	return uint32(xor)
+	return int(xor)
 }
 
 //题目：int数组中，只有两个数字是奇数个，其余的所有数字都是偶数个，找出这个数字
@@ -34,8 +34,8 @@ func Xor_FindOddDights(items []uint32) uint32 {
 //5.Y组中包含的数据一定有B，且不包含A。
 //6.Y组相当于 Xor_FindOddDights 的问题，只有B是奇数个，其余均是偶数个
 //7.Y组中所有数异或，即可得到B，之后，通过 Z^B = A
-func Xor_FindTwoOddDights(items []uint32) (a, b uint32) {
-	z := uint32(0)
+func Xor_FindTwoOddDights(items []int) (a, b int) {
+	z := int(0)
 	for i := 0; i < len(items); i++ {
 		z ^= items[i]
 	}

@@ -8,15 +8,15 @@ package main
 
 //index位置的节点，向上移动
 //二叉树，父节点的坐标是（index-1）/2
-func HeapInsert(items []int32, index int) {
-	for items[index] > items[(index-1)>>1] {
-		Xor_ExchangeItem(items, uint32(index), uint32((index-1)>>1))
-		index = (index - 1) >> 1
+func HeapInsert(items []int, index int) {
+	for items[index] > items[(index-1)/2] {
+		Xor_ExchangeItem(items, index, int((index-1)/2))
+		index = (index - 1) / 2
 	}
 }
 
 //某个数在index位置，能否向下移动
-func HeapIfy(items []int32, index, heapSize int) {
+func Heapify(items []int, index, heapSize int) {
 	//左孩子坐标
 	left := index*2 + 1
 	for left < heapSize {
@@ -25,7 +25,7 @@ func HeapIfy(items []int32, index, heapSize int) {
 			maxChildIndex = left + 1
 		}
 		if items[index] < items[maxChildIndex] {
-			Xor_ExchangeItem(items, uint32(index), uint32(maxChildIndex))
+			Xor_ExchangeItem(items, int(index), int(maxChildIndex))
 		}
 		index = maxChildIndex
 		left = 2*index + 1

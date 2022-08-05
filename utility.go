@@ -4,15 +4,15 @@ import (
 	"math/rand"
 )
 
-func GenerateRandomArray(maxLength, maxValue int) []int32 {
-	arr := make([]int32, rand.Intn(int(maxLength)+1))
+func GenerateRandomArray(maxLength, maxValue int) []int {
+	arr := make([]int, rand.Intn(int(maxLength)+1))
 	for i := 0; i < len(arr); i++ {
-		arr[i] = int32(rand.Intn(maxLength+1) - rand.Intn(maxLength+1))
+		arr[i] = int(rand.Intn(maxLength+1) - rand.Intn(maxLength+1))
 	}
 	return arr
 }
 
-func CompareArray(arr1, arr2 []int32) bool {
+func CompareArray(arr1, arr2 []int) bool {
 	if len(arr1) != len(arr2) {
 		return false
 	}
@@ -24,8 +24,8 @@ func CompareArray(arr1, arr2 []int32) bool {
 	return true
 }
 
-func CopyArray(arr []int32) []int32 {
-	arr2 := make([]int32, len(arr))
+func CopyArray(arr []int) []int {
+	arr2 := make([]int, len(arr))
 	for i := 0; i < len(arr); i++ {
 		arr2[i] = arr[i]
 	}
