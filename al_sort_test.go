@@ -101,3 +101,14 @@ func TestSortArrDistanceLessK(t *testing.T) {
 	})
 	assert.True(t, CompareArray(items, items2), "")
 }
+
+func TestSort_Bucket(t *testing.T) {
+	items := GenerateRandomArray(1000, 10000)
+	//items := []int{4, 1, 2, 6, 5, 7, 3}
+	items2 := CopyArray(items)
+	Sort_Bucket(items)
+	sort.Slice(items2, func(i, j int) bool {
+		return items2[i] < items2[j]
+	})
+	assert.True(t, CompareArray(items, items2), "")
+}

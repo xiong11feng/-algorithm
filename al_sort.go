@@ -326,31 +326,69 @@ func SortArrDistanceLessK(items []int, k int) {
 	}
 }
 
-// integerHeap a type
-type IntegerHeap []int
+//桶排序 - 基数排序
+//算法思想：
+//1.找到数组中最大的数的位数
+//2.从最后低位开始排序，一轮一轮排序，一直排到最高
+func Sort_Bucket(items []int) {
+	if len(items) < 2 {
+		return
+	}
+	maxBits := getMaxDigitsBits(items)
+	radix := make([]int, 10)
+	help := make([]int, len(items))
 
-// IntegerHeap method - gets the length of integerHeap
-func (iheap IntegerHeap) Len() int { return len(iheap) }
+	for i := 1; i <= maxBits; i++ {
+		for j := 0; j < len(items); j++ {
+			x := getDigits(items[j], i)
+			radix[x]++
+		}
+		//将radix变成后一项是前边n项的和
+		for j := 1; j < len(radix); j++ {
+			radix[j] = radix[j-1] + radix[j]
+		}
+		//从后遍历原数组，根据radix，将每个数组调整位置
+		for j := len(items) - 1; j >= 0; j-- {
+			x := getDigits(items[j], i)
+			help[radix[x]-1] = items[j]
+			//减1目前，下次遇到相同的值时，放在更前一个位置，即不改变排好的顺序
+			radix[x]--
+		}
+		//再将help数组copy回items
+		for j := 0; j < count; j++ {
+			items[j] = help[j]
+		}
+	}
 
-// IntegerHeap method - checks if element of i index is less than j index
-func (iheap IntegerHeap) Less(i, j int) bool { return iheap[i] < iheap[j] }
-
-// IntegerHeap method -swaps the element of i to j index
-func (iheap IntegerHeap) Swap(i, j int) { iheap[i], iheap[j] = iheap[j], iheap[i] }
-
-//IntegerHeap method -pushes the item
-func (iheap *IntegerHeap) Push(heapintf interface{}) {
-
-	*iheap = append(*iheap, heapintf.(int))
 }
 
-//IntegerHeap method -pops the item from the heap
-func (iheap *IntegerHeap) Pop() interface{} {
-	var n int
-	var x1 int
-	var previous IntegerHeap = *iheap
-	n = len(previous)
-	x1 = previous[n-1]
-	*iheap = previous[0 : n-1]
-	return x1
+//获取一个int的某位的值，1表示个位，2表示10位，3表示百位...
+func getDigits(item int, bit int) int {
+	result := item
+	for result != 0 && bit > 0 {
+		a := bit
+		sqrt := 10
+		for a > 1 {
+			sqrt *= 10
+			a--
+		}
+		result %= sqrt
+		bit--
+	}
+	return result
+}
+
+func getMaxDigitsBits(items []int) int {
+	max := items[0]
+	for i := 1; i < len(items); i++ {
+		if max < items[i] {
+			max = items[i]
+		}
+	}
+	j := 0
+	for max > 0 {
+		max = max / 10
+		j++
+	}
+	return j
 }
