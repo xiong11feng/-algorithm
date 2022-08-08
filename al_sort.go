@@ -335,13 +335,13 @@ func Sort_Bucket(items []int) {
 		return
 	}
 	maxBits := getMaxDigitsBits(items)
-	radix := make([]int, 10)
-	help := make([]int, len(items))
 
 	for i := 1; i <= maxBits; i++ {
+		radix := make([]int, 20) //0～9是负数，10～19是正数
+		help := make([]int, len(items))
 		for j := 0; j < len(items); j++ {
 			x := getDigits(items[j], i)
-			radix[x]++
+			radix[10+x]++
 		}
 		//将radix变成后一项是前边n项的和
 		for j := 1; j < len(radix); j++ {
@@ -350,12 +350,12 @@ func Sort_Bucket(items []int) {
 		//从后遍历原数组，根据radix，将每个数组调整位置
 		for j := len(items) - 1; j >= 0; j-- {
 			x := getDigits(items[j], i)
-			help[radix[x]-1] = items[j]
 			//减1目前，下次遇到相同的值时，放在更前一个位置，即不改变排好的顺序
-			radix[x]--
+			radix[10+x] = radix[10+x] - 1
+			help[radix[10+x]] = items[j]
 		}
 		//再将help数组copy回items
-		for j := 0; j < count; j++ {
+		for j := 0; j < len(items); j++ {
 			items[j] = help[j]
 		}
 	}
@@ -364,18 +364,13 @@ func Sort_Bucket(items []int) {
 
 //获取一个int的某位的值，1表示个位，2表示10位，3表示百位...
 func getDigits(item int, bit int) int {
-	result := item
-	for result != 0 && bit > 0 {
-		a := bit
-		sqrt := 10
-		for a > 1 {
-			sqrt *= 10
-			a--
-		}
-		result %= sqrt
+	sqrt := 1
+	for bit > 1 {
+		sqrt *= 10
 		bit--
 	}
-	return result
+	item /= sqrt
+	return item % 10
 }
 
 func getMaxDigitsBits(items []int) int {

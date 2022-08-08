@@ -2,9 +2,11 @@ package main
 
 import (
 	"math/rand"
+	"time"
 )
 
 func GenerateRandomArray(maxLength, maxValue int) []int {
+	rand.Seed(time.Hour.Nanoseconds())
 	arr := make([]int, rand.Intn(int(maxLength)+1))
 	for i := 0; i < len(arr); i++ {
 		arr[i] = int(rand.Intn(maxLength+1) - rand.Intn(maxLength+1))
