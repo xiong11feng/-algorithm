@@ -107,6 +107,7 @@ func PosOrderUnRecur(head *BinaryTree, result *[]int) {
 		return
 	}
 	stack := make(Stack, 0)
+	stackTemp := make(Stack, 0)
 	temp := head
 	for !stack.isEmpty() || temp != nil {
 		for temp != nil {
@@ -114,12 +115,32 @@ func PosOrderUnRecur(head *BinaryTree, result *[]int) {
 			temp = temp.Left
 		}
 		for !stack.isEmpty() {
-			item, _ := stack.pop()
+			//取出栈顶最左节点
+			item, _ := stack.peek()
 			temp = item.(*BinaryTree)
-			*result = append(*result, temp.Value)
+
+			//如果有右节点,两种情况
 			if temp.Right != nil {
+				tempStackItem, _ := stackTemp.peek()
+				//如果此节点在临时栈中，说明，这个头节点已经向右遍历过了，无需向右子树遍历了，记录即可
+				if tempStackItem != nil {
+					if tempStackItem.(*BinaryTree) == temp {
+						*result = append(*result, temp.Value)
+						stackTemp.pop()
+						stack.pop()
+						temp = nil
+						break
+					}
+				}
+				//情况2，右子树没有被遍历过，当前节点入临时栈，向右子树遍历
+				stackTemp.push(temp)
 				temp = temp.Right
 				break
+			}
+			//如果没有右节点，记录
+			if temp.Right == nil {
+				*result = append(*result, temp.Value)
+				stack.pop()
 			}
 			temp = nil
 		}
@@ -143,6 +164,15 @@ func (s *Stack) pop() (interface{}, error) {
 	defer func() {
 		*s = a[:len(a)-1]
 	}()
+	return a[len(a)-1], nil
+}
+
+//获取栈顶元素
+func (s *Stack) peek() (interface{}, error) {
+	if len(*s) == 0 {
+		return nil, errors.New("Empty Stack")
+	}
+	a := *s
 	return a[len(a)-1], nil
 }
 func (s *Stack) isEmpty() bool {
