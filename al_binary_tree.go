@@ -148,6 +148,92 @@ func PosOrderUnRecur(head *BinaryTree, result *[]int) {
 
 }
 
+func PrintTree() {
+
+}
+
+//二叉树的深度优先遍历就是中序遍历
+//二叉树的宽度优先遍历：
+//使用队列，从头进队列，弹出后，先放左孩子，再放右孩子，然后弹出
+func WeigthOrder(head *BinaryTree, result *[]int) {
+	if head == nil {
+		return
+	}
+	queue := make(Queue, 0)
+	temp := head
+	queue.push(temp)
+	for !queue.isEmpty() {
+		tempItem, _ := queue.pop()
+		temp = tempItem.(*BinaryTree)
+		*result = append(*result, temp.Value)
+		if temp.Left != nil {
+			queue.push(temp.Left)
+		}
+		if temp.Right != nil {
+			queue.push(temp.Right)
+		}
+	}
+}
+
+//【题目】求二叉树的最大宽度
+//思路1：使用宽度优先遍历，记录每个节点所在的层数，每层统计总节点数，取得最大值
+//思路2【不使用hash表】:
+func MaxWeightBinaryTree(head *BinaryTree) int {
+	res := 0
+	if head == nil {
+		return res
+	}
+	queue := make(Queue, 0)
+	temp := head
+	queue.push(temp)
+	maps := make(map[*BinaryTree]int, 0)
+	maps[temp] = 1
+	currentLevel := 1
+	currentNodes := 0
+	for !queue.isEmpty() {
+		tempItem, _ := queue.pop()
+		temp = tempItem.(*BinaryTree)
+		if currentLevel == maps[temp] {
+			currentNodes++
+		} else {
+			if currentNodes > res {
+				res = currentNodes
+			}
+			currentLevel = maps[temp]
+			currentNodes = 1
+		}
+		if temp.Left != nil {
+			queue.push(temp.Left)
+			maps[temp.Left] = currentLevel + 1
+		}
+		if temp.Right != nil {
+			queue.push(temp.Right)
+			maps[temp.Right] = currentLevel + 1
+		}
+	}
+	return res
+}
+
+type Queue []interface{}
+
+func (q *Queue) push(a interface{}) {
+	*q = append(*q, a)
+}
+func (q *Queue) pop() (interface{}, error) {
+	if q.isEmpty() {
+		return nil, errors.New("Empty Queue")
+	}
+	a := *q
+	defer func() {
+		*q = a[1:]
+	}()
+	return a[0], nil
+}
+
+func (q *Queue) isEmpty() bool {
+	return len(*q) == 0
+}
+
 type Stack []interface{}
 
 // 入栈

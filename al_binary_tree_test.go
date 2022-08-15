@@ -71,6 +71,18 @@ func TestPosOrderUnRecur(t *testing.T) {
 	PosOrderUnRecur(tree, &actual)
 	assert.Equal(t, "365429871", getArrString(actual))
 }
+func TestWeigthOrder(t *testing.T) {
+	tree := GetTestTree()
+	actual := make([]int, 0)
+	WeigthOrder(tree, &actual)
+	assert.Equal(t, "127348596", getArrString(actual))
+}
+
+func TestMaxWeightBinaryTree(t *testing.T) {
+	tree := GetTestTree()
+	actual := MaxWeightBinaryTree(tree)
+	assert.Equal(t, 3, actual)
+}
 
 func getArrString(arr []int) string {
 	res := ""
