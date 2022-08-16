@@ -214,6 +214,74 @@ func MaxWeightBinaryTree(head *BinaryTree) int {
 	return res
 }
 
+//搜索二叉树：每颗子树，左比它小，右比它大
+//【题目】如何判断一棵树是不是搜索二叉树
+//思想：中序遍历，一定是升序，
+func IsBST(head *BinaryTree) bool {
+	if head == nil {
+		return true
+	}
+	var maxValue = INT_MIN
+
+	return isBSTRecur(head, &maxValue)
+}
+
+const INT_MAX = int(^uint(0) >> 1)
+const INT_MIN = ^INT_MAX
+
+func isBSTRecur(head *BinaryTree, maxValue *int) bool {
+	if head == nil {
+		return true
+	}
+	isleft := isBSTRecur(head.Left, maxValue)
+	if !isleft {
+		return false
+	}
+	//比较（之前中序打印的时机）
+	if *maxValue > head.Value {
+		return false
+	}
+	*maxValue = head.Value
+	return isBSTRecur(head.Right, maxValue)
+
+}
+
+//【题目】：如何判断二叉树是完全二叉树
+//宽度遍历，遇到一下情况，不是完全二叉树
+//1.任意节点只有右孩子，没有左孩子
+//2.如果遇到第一个左右还在不双全的情况，那么接下来的所有节点都必须是叶子节点
+func IsCBT(head *BinaryTree) bool {
+	if head == nil {
+		return true
+	}
+	queue := make(Queue, 0)
+	temp := head
+	queue.push(temp)
+	allLeaves := false
+	for !queue.isEmpty() {
+		tempItem, _ := queue.pop()
+		temp = tempItem.(*BinaryTree)
+		if allLeaves && (temp.Left != nil || temp.Right != nil) {
+			return true
+		}
+		//1.任意节点只有右孩子，没有左孩子
+		if temp.Left == nil && temp.Right != nil {
+			return false
+		}
+		//2.如果遇到第一个左右还在不双全的情况，那么接下来的所有节点都必须是叶子节点
+		if !(temp.Left != nil && temp.Right != nil) {
+			allLeaves = true
+		}
+		if temp.Left != nil {
+			queue.push(temp.Left)
+		}
+		if temp.Right != nil {
+			queue.push(temp.Right)
+		}
+	}
+	return true
+}
+
 type Queue []interface{}
 
 func (q *Queue) push(a interface{}) {

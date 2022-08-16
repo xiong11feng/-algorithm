@@ -30,6 +30,44 @@ func GetTestTree() *BinaryTree {
 	tree.Right.Right.Right = &BinaryTree{Value: 9}
 	return tree
 }
+
+//测试树
+//                 7
+//             /       \
+//            3         8
+//          /   \         \
+//         2     4         9
+//                \         \
+//                6          10
+//                /
+//               5
+func GetBSTree() *BinaryTree {
+	tree := &BinaryTree{Value: 7}
+	tree.Left = &BinaryTree{Value: 3}
+	tree.Left.Left = &BinaryTree{Value: 2}
+	tree.Left.Right = &BinaryTree{Value: 4}
+	tree.Left.Right.Right = &BinaryTree{Value: 6}
+	tree.Left.Right.Right.Left = &BinaryTree{Value: 5}
+	tree.Right = &BinaryTree{Value: 8}
+	tree.Right.Right = &BinaryTree{Value: 9}
+	tree.Right.Right.Right = &BinaryTree{Value: 10}
+	return tree
+}
+
+//测试树
+//                 7
+//             /       \
+//            3         8
+//          /   \
+//         2     4
+func GetCBTree() *BinaryTree {
+	tree := &BinaryTree{Value: 7}
+	tree.Left = &BinaryTree{Value: 3}
+	tree.Left.Left = &BinaryTree{Value: 2}
+	tree.Left.Right = &BinaryTree{Value: 4}
+	tree.Right = &BinaryTree{Value: 8}
+	return tree
+}
 func TestPreOrderRecur(t *testing.T) {
 	tree := GetTestTree()
 	actual := make([]int, 0)
@@ -82,6 +120,26 @@ func TestMaxWeightBinaryTree(t *testing.T) {
 	tree := GetTestTree()
 	actual := MaxWeightBinaryTree(tree)
 	assert.Equal(t, 3, actual)
+}
+
+func TestIsBST(t *testing.T) {
+	tree := GetTestTree()
+	actual := IsBST(tree)
+	assert.Equal(t, false, actual)
+
+	tree = GetBSTree()
+	actual = IsBST(tree)
+	assert.Equal(t, true, actual)
+}
+
+func TestIsCBT(t *testing.T) {
+	tree := GetTestTree()
+	actual := IsCBT(tree)
+	assert.Equal(t, false, actual)
+
+	tree = GetCBTree()
+	actual = IsCBT(tree)
+	assert.Equal(t, true, actual)
 }
 
 func getArrString(arr []int) string {
