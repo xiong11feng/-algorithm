@@ -68,6 +68,23 @@ func GetCBTree() *BinaryTree {
 	tree.Right = &BinaryTree{Value: 8}
 	return tree
 }
+
+//测试树
+//                 7
+//             /       \
+//            3         8
+//          /   \     /   \
+//         2     4   9    10
+func GetFullTree() *BinaryTree {
+	tree := &BinaryTree{Value: 7}
+	tree.Left = &BinaryTree{Value: 3}
+	tree.Left.Left = &BinaryTree{Value: 2}
+	tree.Left.Right = &BinaryTree{Value: 4}
+	tree.Right = &BinaryTree{Value: 8}
+	tree.Right.Left = &BinaryTree{Value: 9}
+	tree.Right.Right = &BinaryTree{Value: 10}
+	return tree
+}
 func TestPreOrderRecur(t *testing.T) {
 	tree := GetTestTree()
 	actual := make([]int, 0)
@@ -132,6 +149,20 @@ func TestIsBST(t *testing.T) {
 	assert.Equal(t, true, actual)
 }
 
+func TestIsFullBT(t *testing.T) {
+	tree := GetTestTree()
+	actual := IsFullBT(tree)
+	assert.Equal(t, false, actual)
+
+	tree = GetBSTree()
+	actual = IsFullBT(tree)
+	assert.Equal(t, false, actual)
+
+	tree = GetFullTree()
+	actual = IsFullBT(tree)
+	assert.Equal(t, true, actual)
+}
+
 func TestIsCBT(t *testing.T) {
 	tree := GetTestTree()
 	actual := IsCBT(tree)
@@ -140,6 +171,34 @@ func TestIsCBT(t *testing.T) {
 	tree = GetCBTree()
 	actual = IsCBT(tree)
 	assert.Equal(t, true, actual)
+}
+
+func TestIsBalanceBT(t *testing.T) {
+	tree := GetTestTree()
+	actual := IsBalanceBT(tree)
+	assert.Equal(t, false, actual)
+
+	tree = GetBSTree()
+	actual = IsBalanceBT(tree)
+	assert.Equal(t, false, actual)
+
+	tree = GetCBTree()
+	actual = IsBalanceBT(tree)
+	assert.Equal(t, true, actual)
+}
+
+func TestFoldPaper(t *testing.T) {
+	arr := FoldPaper(1)
+	actual := getArrString(arr)
+	assert.Equal(t, "1", actual)
+
+	arr = FoldPaper(2)
+	actual = getArrString(arr)
+	assert.Equal(t, "110", actual)
+
+	arr = FoldPaper(3)
+	actual = getArrString(arr)
+	assert.Equal(t, "1101100", actual)
 }
 
 func getArrString(arr []int) string {

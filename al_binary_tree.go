@@ -217,6 +217,7 @@ func MaxWeightBinaryTree(head *BinaryTree) int {
 //搜索二叉树：每颗子树，左比它小，右比它大
 //【题目】如何判断一棵树是不是搜索二叉树
 //思想：中序遍历，一定是升序，
+//思路2:递归，左子树是否是搜索二叉树，右子树是否是搜索二叉树，左侧最大值 < 当前值 < 右侧最大值
 func IsBST(head *BinaryTree) bool {
 	if head == nil {
 		return true
@@ -280,6 +281,150 @@ func IsCBT(head *BinaryTree) bool {
 		}
 	}
 	return true
+}
+
+//【题目】：如何判断树是满二叉树
+//思路1:找出最大深度，和节点个数，节点个数 l = 2的n次方-1
+//思路2:递归，左边是满二叉树，右边也是满二叉树
+func IsFullBT(head *BinaryTree) bool {
+	height, nodes := isFullBTProcess(head)
+	return nodes == 1<<height-1
+}
+
+func isFullBTProcess(head *BinaryTree) (height, nodes int) {
+
+	if head == nil {
+		return height, nodes
+	}
+	height = 1
+	nodes = 1
+	heightMax := 0
+
+	if head.Left != nil {
+		heightL, nodesL := isFullBTProcess(head.Left)
+		if heightL > heightMax {
+			heightMax = heightL
+		}
+		nodes += nodesL
+	}
+	if head.Right != nil {
+		heightR, nodesR := isFullBTProcess(head.Right)
+		if heightR > heightMax {
+			heightMax = heightR
+		}
+		nodes += nodesR
+	}
+	height = heightMax + 1
+	return height, nodes
+}
+
+//【题目】：如何判断一棵树是平衡二叉树（对于任何一棵子树，它的左子树和右子树的高度差不能超过1）
+func IsBalanceBT(head *BinaryTree) bool {
+	result, _ := isBalanceBTPrcoess(head)
+	return result
+}
+
+//树形DP题目，递归左右子树，找到解
+
+//【题目】找到node1和node2的最低公共祖先节点
+//思路1: 找到所有的节点的 parent，找node1的parent，放到集合中，
+//再找node2的parent，直到出现在集合中，即为最低公共祖先节点
+//
+//思路2：向下递归，如果递归到的节点是空，返回空是node1，返回node1，是node2返回node2，即找到node1或者node2就提前停止递归。
+//如果左右子树返回的都不空，说明返回的是node1和node2，那么当前节点就是最初的node1和node2的最低公共祖先节点，返回当前节点
+//如果左右子树谁不空，就返回谁，因为不空的节点一定是node1或者node2
+//换个说法，当前节点只会有三种情况：
+//1.左右一个空，一个node1或者node2，是下边的情况1
+//2.左右都不空，说明是node1和node2的汇集点
+//3.都空，说明当前节点及其子树没有node1或者node2
+//情况1: node1和node2 的最低公共祖先节点是node1或者node2
+//情况2: node1和node2 的最低公共祖先节点不是node1或者node2
+func LowestCommonAncester(head, node1, node2 *BinaryTree) *BinaryTree {
+	if head == nil || head == node1 || head == node2 {
+		//遇到nil，返回nil，
+		//遇到node1，返回node1
+		//遇到node2，返回node2
+		return head
+	}
+	left := LowestCommonAncester(head.Left, node1, node2)
+	right := LowestCommonAncester(head.Right, node1, node2)
+	if left != nil && right != nil {
+		//左右均不不是nil，返回头节点
+		return head
+	} else if left != nil {
+		//左右两棵树并不都有返回值，left不是nil返回left，否则返回right
+		return left
+	} else {
+		return right
+	}
+}
+
+//【题目】找到一个节点的后继节点（后继节点定义，中序遍历排序后，某节点的下一个节点）
+//方法一：中序遍历即可
+//方法二（二叉树有parent指针）：分情况
+//情况1:x有右树，后继节点是右树最左节点
+//情况2:x无右树，层层向上找父节点，当当前节点是父节点的左子树的时候，此父节点就是后继节点
+//（原因是，x是此节点的左子树的最右节点，x后一定是此节点），找不到的话，后继节点就是空
+
+func isBalanceBTPrcoess(head *BinaryTree) (isBanlance bool, height int) {
+	if head == nil {
+		return true, 0
+	}
+	height = 1
+	heightLeft := 0
+	heightRight := 0
+	if head.Left != nil {
+		isBanlance, heightLeft = isBalanceBTPrcoess(head.Left)
+		if !isBanlance {
+			return false, height
+		}
+	}
+	if head.Right != nil {
+		isBanlance, heightRight = isBalanceBTPrcoess(head.Right)
+		if !isBanlance {
+			return false, height
+		}
+	}
+	if heightLeft-heightRight > 1 || heightLeft-heightRight < -1 {
+		return false, height
+	}
+	if heightRight > heightLeft {
+		height += heightRight
+	} else {
+		height += heightLeft
+	}
+	return true, height
+}
+
+//【题目】打印纸条对摺n次后的凹凸折痕
+//n=1，凹折痕
+//n=2，凹凹凸折痕
+//n=3 ...
+//折纸发现规律，n其实是二叉树的高度，头节点是凹，每一个左子树的头节点都是凹，每一个右子树的头节点都是凸
+//纸条上的折痕顺序，其实就是上述二叉树的中序遍历的结果
+//解决方案：
+//1.中序遍历二叉树，打印，额外空间较多
+//2.递归的方式
+
+func FoldPaper(n int) []int {
+	result := make([]int, 0)
+	folderPaperProcess(n, 1, true, &result)
+	return result
+}
+
+func folderPaperProcess(n, height int, down bool, arr *[]int) {
+	if n < height {
+		return
+	}
+	//左侧递归
+	folderPaperProcess(n, height+1, true, arr)
+	//当前值进数组
+	if down {
+		*arr = append(*arr, 1)
+	} else {
+		*arr = append(*arr, 0)
+	}
+	folderPaperProcess(n, height+1, false, arr)
 }
 
 type Queue []interface{}
