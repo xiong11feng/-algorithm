@@ -28,6 +28,7 @@ func (g *Graph) AddNode(values []int) {
 		g.Nodes[values[i]] = &GraphNode{Value: values[i]}
 	}
 }
+
 func (g *Graph) AddEdge(from, to, weight int) bool {
 
 	if _, ok := g.Nodes[from]; !ok {
@@ -36,6 +37,7 @@ func (g *Graph) AddEdge(from, to, weight int) bool {
 	if _, ok := g.Nodes[to]; !ok {
 		return false
 	}
+	edge := &GraphEdge{Weight: weight, From: g.Nodes[from], To: g.Nodes[to]}
 	if g.Edges == nil {
 		g.Edges = make([]*GraphEdge, 0)
 	}
@@ -44,8 +46,12 @@ func (g *Graph) AddEdge(from, to, weight int) bool {
 		g.Nodes[from].Nexts = make([]*GraphNode, 0)
 	}
 	g.Nodes[from].Nexts = append(g.Nodes[from].Nexts, g.Nodes[to])
+	if g.Nodes[from].Edges == nil {
+		g.Nodes[from].Edges = make([]*GraphEdge, 0)
+	}
+	g.Nodes[from].Edges = append(g.Nodes[from].Edges, edge)
 	g.Nodes[to].In++
-	g.Edges = append(g.Edges, &GraphEdge{Weight: weight, From: g.Nodes[from], To: g.Nodes[to]})
+	g.Edges = append(g.Edges, edge)
 	return true
 }
 
@@ -215,4 +221,53 @@ func KruskaSmallTree(graph *Graph) []GraphEdge {
 		}
 	}
 	return result
+}
+
+//【Prime 算法】无向图，生成最小生成树
+func PrimeSmallTree(graph *Graph) []GraphEdge {
+	sortEdegeQueue := make([]*GraphEdge, 0)
+	// for _, v := range graph.Edges {
+	// 	sortEdegeQueue = append(sortEdegeQueue, v)
+	// }
+	alreadHandlSet := make(map[*GraphNode]struct{})
+	result := make([]GraphEdge, 0)
+	for _, v := range graph.Nodes {
+		if _, ok := alreadHandlSet[v]; !ok {
+			alreadHandlSet[v] = struct{}{}
+			sortEdegeQueue = append(sortEdegeQueue, v.Edges...)
+			for len(sortEdegeQueue) > 0 {
+				minEdge := PrimeSmallTree_findSmallEdge(&sortEdegeQueue)
+				if _, ok := alreadHandlSet[minEdge.To]; !ok {
+					alreadHandlSet[minEdge.To] = struct{}{}
+					result = append(result, *minEdge)
+					sortEdegeQueue = append(sortEdegeQueue, minEdge.To.Edges...)
+				}
+			}
+		}
+	}
+	return result
+}
+
+func PrimeSmallTree_findSmallEdge(edges *[]*GraphEdge) *GraphEdge {
+	min := (*edges)[0].Weight
+	index := 0
+	for idx, v := range *edges {
+		if min >= v.Weight {
+			min = v.Weight
+			index = idx
+		}
+	}
+	minEdge := (*edges)[index]
+	temp := make([]*GraphEdge, 0)
+	temp = append(temp, (*edges)[:index]...)
+	temp = append(temp, (*edges)[index+1:]...)
+	*edges = temp
+	return minEdge
+}
+
+//【Dijkstra 算法】 使用范围，没有权值为负的边
+// https://zhuanlan.zhihu.com/p/338414118
+// Dijkstra 算法是一个基于「贪心」、「广度优先搜索」、「动态规划」求一个图中一个点到其他所有点的最短路径的算法，时间复杂度 O(n2)
+func Dijkstra_Graph() {
+
 }

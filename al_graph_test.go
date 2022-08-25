@@ -135,3 +135,13 @@ func TestKruskaSmallTree(t *testing.T) {
 	}
 	assert.Equal(t, 200, actual)
 }
+
+func TestPrimeSmallTree(t *testing.T) {
+	gNode := GetTopGraphWithWeight()
+	edges := PrimeSmallTree(gNode)
+	actual := 0
+	for i := 0; i < len(edges); i++ {
+		actual += edges[i].Weight
+	}
+	assert.Equal(t, 200, actual)
+}
