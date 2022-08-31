@@ -1,6 +1,8 @@
 package main
 
-import "sort"
+import (
+	"sort"
+)
 
 //图，就是点和边的组合
 //图的存储方式
@@ -268,6 +270,47 @@ func PrimeSmallTree_findSmallEdge(edges *[]*GraphEdge) *GraphEdge {
 //【Dijkstra 算法】 使用范围，没有权值为负的边
 // https://zhuanlan.zhihu.com/p/338414118
 // Dijkstra 算法是一个基于「贪心」、「广度优先搜索」、「动态规划」求一个图中一个点到其他所有点的最短路径的算法，时间复杂度 O(n2)
-func Dijkstra_Graph() {
+func Dijkstra_Graph(head *GraphNode) map[*GraphNode]int {
+	//distanceMap 从 head出发，到key点的最小距离
+	//没有key，表示正无穷
+	distanceMap := make(map[*GraphNode]int)
 
+	//先将自己加入节点
+	distanceMap[head] = 0
+
+	//已经处理过的节点，无需再处理
+	selectedSet := make(map[*GraphNode]struct{})
+	minNode := dijkstra_Graph_getMinDsitanceAndSelectedNode(distanceMap, selectedSet)
+	for minNode != nil {
+		//到当前节点需要的值
+		currentValue := distanceMap[minNode]
+		for _, v := range minNode.Edges {
+			toNode := v.To
+			if _, ok := distanceMap[toNode]; !ok {
+				distanceMap[toNode] = currentValue + v.Weight
+			}
+			curToNodeValue := distanceMap[toNode]
+			if curToNodeValue > currentValue+v.Weight {
+				distanceMap[toNode] = currentValue + v.Weight
+			}
+		}
+		//当前节点处理过了，就不再处理
+		selectedSet[minNode] = struct{}{}
+		minNode = dijkstra_Graph_getMinDsitanceAndSelectedNode(distanceMap, selectedSet)
+	}
+	return distanceMap
+}
+
+func dijkstra_Graph_getMinDsitanceAndSelectedNode(distanceMap map[*GraphNode]int, selectedSet map[*GraphNode]struct{}) *GraphNode {
+	min := -1
+	var temp *GraphNode
+	for k, v := range distanceMap {
+		if min == -1 || min > v {
+			if _, ok := selectedSet[k]; !ok {
+				min = v
+				temp = k
+			}
+		}
+	}
+	return temp
 }

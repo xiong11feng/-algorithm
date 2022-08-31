@@ -145,3 +145,14 @@ func TestPrimeSmallTree(t *testing.T) {
 	}
 	assert.Equal(t, 200, actual)
 }
+
+func TestDijkstra_Graph(t *testing.T) {
+	gNode := GetTopGraphWithWeight()
+	tempNode := gNode.Nodes[1]
+	edges := Dijkstra_Graph(tempNode)
+	actual := 0
+	for _, v := range edges {
+		actual += v
+	}
+	assert.Equal(t, 370, actual)
+}
