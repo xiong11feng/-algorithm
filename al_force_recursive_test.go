@@ -21,3 +21,11 @@ func TestSubSequenceString(t *testing.T) {
 	expected := 8
 	assert.Equal(t, expected, actual, "")
 }
+
+func TestFindAllPermutation(t *testing.T) {
+	result := make([]string, 0)
+	FindAllPermutation("abcdef", &result)
+	actual := len(result)
+	expected := 6 * 5 * 4 * 3 * 2
+	assert.Equal(t, expected, actual, "")
+}

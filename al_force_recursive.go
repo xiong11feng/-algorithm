@@ -45,3 +45,29 @@ func subSequenceStringProcess(a string, current string, i int, result *[]string)
 	subSequenceStringProcess(a, current, i+1, result) //不要当前字符
 
 }
+
+//【找到字符串的全排列】
+func FindAllPermutation(input string, result *[]string) {
+	findAllPermutationProcess("", input, result)
+}
+
+//current表示之前已经拼接好的
+//needPermutation 表示还剩下没有处理的
+func findAllPermutationProcess(current string, needPermutation string, result *[]string) {
+	//如果只剩下最后一个字符，无需排序了，拼接到current
+	if len(needPermutation) == 1 {
+		current += needPermutation
+		*result = append(*result, current)
+		return
+	}
+	//判断字符串是不是重复，
+	//还没有拼接的字符串needPermutation，如果有重复项，只处理一个即可。
+	//处理多次会重复
+	duplicated := make(map[byte]struct{}, 0)
+	tempCurrent := current
+	for j := 0; j < len(needPermutation); j++ {
+		if _, ok := duplicated[needPermutation[j]]; !ok {
+			findAllPermutationProcess(tempCurrent+string(needPermutation[j]), needPermutation[:j]+needPermutation[j+1:], result)
+		}
+	}
+}
