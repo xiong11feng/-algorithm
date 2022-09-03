@@ -2,6 +2,11 @@
 //把大规模的问题，换成小规模的尝试
 package main
 
+import (
+	"strconv"
+	"strings"
+)
+
 //【汉诺塔问题】n层汉诺塔，打印所有轨迹
 //递归思想：
 //假设有n个盘，A，B，C 三个柱，启示A柱上有n个盘
@@ -70,4 +75,97 @@ func findAllPermutationProcess(current string, needPermutation string, result *[
 			findAllPermutationProcess(tempCurrent+string(needPermutation[j]), needPermutation[:j]+needPermutation[j+1:], result)
 		}
 	}
+}
+
+//【一个整型纸牌数组，只能从左或从右抽取纸牌】，两个人轮流抽取，谁拿到的纸牌的总数多，谁获胜
+//例如[1,10,100,2] ,A 1; B 10; A 100; B 1,A=101,B=11,A获胜
+//返回谁获胜
+func LRArrayGame(arr []int) bool {
+	firstResult := lRArrayGame_first(arr, 0, len(arr)-1)
+	secondResult := lRArrayGame_second(arr, 0, len(arr)-1)
+	return firstResult > secondResult
+}
+
+//先拿纸牌
+func lRArrayGame_first(arr []int, l, r int) int {
+	//l == r 表示只有一张牌了，直接拿走
+	if l == r {
+		return arr[l]
+	}
+	//先拿左边
+	resultL := arr[l] + lRArrayGame_second(arr, l+1, r)
+	resultR := arr[r] + lRArrayGame_second(arr, l, r-1)
+	if resultL > resultR {
+		return resultL
+	}
+	return resultR
+}
+func lRArrayGame_second(arr []int, l, r int) int {
+	//l == r 表示只有一张牌了，后手是0
+	if l == r {
+		return 0
+	}
+	//左边先被拿走，
+	resultL := lRArrayGame_first(arr, l+1, r)
+	//右边先被拿走
+	resultR := lRArrayGame_first(arr, l, r-1)
+	if resultL < resultR {
+		return resultL
+	}
+	return resultR
+}
+
+//【逆序一个栈，不申请额外空间，使用递归完成】
+func ReverseStack(stack *Stack) {
+	if stack.isEmpty() {
+		return
+	}
+	temp := reverseStackProcess(stack)
+	ReverseStack(stack)
+	stack.push(temp)
+}
+
+//将栈底元素取出
+func reverseStackProcess(stack *Stack) interface{} {
+	temp, _ := stack.pop()
+	//如果栈是空，则temp是栈低元素，返回
+	if stack.isEmpty() {
+		return temp
+	}
+	bottom := reverseStackProcess(stack)
+	stack.push(temp)
+	return bottom
+}
+
+//[字符串转换成字母]，1 - A，2-B，26-Z
+//例如111 可以转换成AAA，KA ，AK三种
+func CalcIntString2LetterString(input string) int {
+	return calcIntString2LetterStringProcess(input)
+}
+
+func calcIntString2LetterStringProcess(leftString string) int {
+	if leftString == "" {
+		return 1
+	}
+	if leftString[0:1] == "0" {
+		return 0
+	}
+	result := 0
+	if len(leftString) > 0 {
+		result += calcIntString2LetterStringProcess(leftString[1:])
+	}
+	if len(leftString) > 1 && intString2LetterString(leftString[0:2]) != "" {
+		result += calcIntString2LetterStringProcess(leftString[2:])
+	}
+	return result
+}
+func intString2LetterString(input string) string {
+	inputInt, _ := strconv.ParseInt(input, 10, 64)
+	if inputInt == 0 {
+		return ""
+	}
+	if inputInt > 26 {
+		return ""
+	}
+	return strings.ToUpper(string(rune(96 + 1)))
 }
