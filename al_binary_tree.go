@@ -427,6 +427,35 @@ func folderPaperProcess(n, height int, down bool, arr *[]int) {
 	folderPaperProcess(n, height+1, false, arr)
 }
 
+//【Morris遍历】
+func Morris(head *BinaryTree, result *[]int) {
+	if head == nil {
+		return
+	}
+	cur := head
+	var mostRigthNode *BinaryTree
+	for cur != nil {
+		//most right是当前节点的左孩子
+		mostRigthNode = cur.Left
+		//mostRigthNode不是nil
+		if mostRigthNode != nil {
+			//找到最右的子树
+			for mostRigthNode.Right != nil && mostRigthNode.Right != cur {
+				mostRigthNode = mostRigthNode.Right
+			}
+			//第一次来到最右节点
+			if mostRigthNode.Right == nil {
+				mostRigthNode.Right = cur
+				cur = cur.Left
+				continue
+			} else {
+				mostRigthNode.Right = nil
+			}
+		}
+		cur = cur.Right
+	}
+}
+
 type Queue []interface{}
 
 func (q *Queue) push(a interface{}) {
