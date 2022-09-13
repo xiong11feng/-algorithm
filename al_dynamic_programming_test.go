@@ -57,3 +57,81 @@ func BenchmarkRobotWalk2(b *testing.B) {
 	k := 35
 	RobotWalk2(k, n, start, end)
 }
+
+func TestHorseGame1(t *testing.T) {
+	x := 3
+	y := 3
+	k := 10
+	actual := HorseGame1(x, y, k)
+	expected := 1178562
+	assert.Equal(t, expected, actual)
+}
+
+func TestHorseGame2(t *testing.T) {
+	x := 3
+	y := 3
+	k := 10
+	actual := HorseGame2(x, y, k)
+	expected := 1178562
+	assert.Equal(t, expected, actual)
+}
+
+func BenchmarkHorseGame1(b *testing.B) {
+	x := 3
+	y := 3
+	k := 14
+	res := HorseGame1(x, y, k)
+	b.Logf("result is %d", res)
+}
+
+func BenchmarkHorseGame2(b *testing.B) {
+	x := 3
+	y := 3
+	k := 14
+	res := HorseGame2(x, y, k)
+	b.Logf("result is %d", res)
+}
+
+func TestFindMoney1(t *testing.T) {
+	arr := []int{1, 2, 3, 5, 10, 20, 50, 100}
+	aim := 5
+	actual := FindMoney1(aim, arr)
+	expected := 6 //1+1+1+1+1,2+3,1+1+1+2,1+1+3,1+2+2,5
+	assert.Equal(t, expected, actual)
+}
+func TestFindMoney2(t *testing.T) {
+	arr := []int{1, 2, 3, 5, 10, 20, 50, 100}
+	aim := 5
+	actual := FindMoney2(aim, arr)
+	expected := 6 //1+1+1+1+1,2+3,1+1+1+2,1+1+3,1+2+2,5
+	assert.Equal(t, expected, actual)
+}
+
+func TestFndMoney3(t *testing.T) {
+	arr := []int{1, 2, 3, 5, 10, 20, 50, 100}
+	aim := 5
+	actual := FindMoney3(aim, arr)
+	expected := 6 //1+1+1+1+1,2+3,1+1+1+2,1+1+3,1+2+2,5
+	assert.Equal(t, expected, actual)
+}
+
+func BenchmarkFindMoney1(b *testing.B) {
+	arr := []int{1, 2, 3, 5, 7, 10, 15, 20, 22, 25, 30, 40, 50, 60, 62, 67, 70, 72, 75, 80, 90, 100}
+	aim := 200
+	res := FindMoney1(aim, arr)
+	b.Logf("result is %d", res)
+}
+
+func BenchmarkFindMoney2(b *testing.B) {
+	arr := []int{1, 2, 3, 5, 7, 10, 15, 20, 22, 25, 30, 40, 50, 60, 62, 67, 70, 72, 75, 80, 90, 100}
+	aim := 50000
+	res := FindMoney2(aim, arr)
+	b.Logf("result is %d", res)
+}
+
+func BenchmarkFindMoney3(b *testing.B) {
+	arr := []int{1, 2, 3, 5, 7, 10, 15, 20, 22, 25, 30, 40, 50, 60, 62, 67, 70, 72, 75, 80, 90, 100}
+	aim := 50000
+	res := FindMoney3(aim, arr)
+	b.Logf("result is %d", res)
+}
